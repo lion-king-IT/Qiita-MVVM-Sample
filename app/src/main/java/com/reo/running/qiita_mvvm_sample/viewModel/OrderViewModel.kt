@@ -33,7 +33,7 @@ class OrderViewModel : ViewModel() {
     // お客さんの行動
     fun orderTuna() {
         when (_orderText.value) {
-            
+
             "入店", "再入店" -> {
                 _orderImage.value = R.drawable.sushi_syokunin_man_mask
                 _orderText.value = "マグロ"
@@ -64,9 +64,13 @@ class OrderViewModel : ViewModel() {
 
     // お会計ボタンを押したときの処理
     fun pay() {
-        _orderImage.value = R.drawable.message_okaikei_ohitori
-        _orderText.value = "帰る"
-        _billText.value = ""
+        when (_billText.value) {
+            "お会計" -> {
+                _orderImage.value = R.drawable.message_okaikei_ohitori
+                _orderText.value = "帰る"
+                _billText.value = ""
+            }
+        }
     }
 
 }

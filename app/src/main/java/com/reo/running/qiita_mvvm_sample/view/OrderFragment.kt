@@ -43,6 +43,7 @@ class OrderFragment : Fragment() {
         // viewLifecycleOwnerを第一引数を渡すことで、お客さんに合わせて監視する設定
         viewModel.orderImage.observe(viewLifecycleOwner, imageObserver)
         viewModel.orderText.observe(viewLifecycleOwner, textObserver)
+        viewModel.billText.observe(viewLifecycleOwner, billObserver)
         it.root
     }
 }
