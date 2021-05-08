@@ -4,9 +4,6 @@
 
     <data>
 
-        <variable
-            name="orderViewModel"
-            type="com.reo.running.qiita_mvvm_sample.viewModel.OrderViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,35 +11,31 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/orderImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:src=""
-            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/orderImageView"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:layout_marginTop="80dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/tunaOrderButton"
+            android:id="@+id/orderButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{orderViewModel.buttonText}"
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@id/orderImage"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="80dp"
             app:layout_constraintEnd_toEndOf="parent"
-            android:onClick="@{() -> view_model.tunaOrder()" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/orderImageView" />
 
         <Button
-            android:id="@+id/complete_meal"
+            android:id="@+id/billButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="@string/bill_text"
-            app:layout_constraintTop_toBottomOf="@id/tunaOrderButton"
+            android:layout_marginTop="80dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/orderButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
