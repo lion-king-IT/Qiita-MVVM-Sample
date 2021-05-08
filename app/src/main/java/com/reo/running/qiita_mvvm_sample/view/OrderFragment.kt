@@ -1,6 +1,7 @@
 package com.reo.running.qiita_mvvm_sample.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ class OrderFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? = FragmentOrderBinding.inflate(inflater, container, false).let {
+        Log.d("debug-inFragment", "init")
         it.lifecycleOwner = viewLifecycleOwner
         it.orderButton.setOnClickListener { viewModel.orderTuna() }
         it.billButton.setOnClickListener { viewModel.pay() }

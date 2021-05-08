@@ -1,5 +1,6 @@
 package com.reo.running.qiita_mvvm_sample.viewModel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,8 +28,11 @@ class OrderViewModel : ViewModel() {
 
     // 注文ボタンのテキストの状態だけ初期値を設定
     init {
+        Log.d("debug", "init")
         _orderText.value = "入店"
+        _orderImage.value = R.drawable.sushi_syokunin_man_mask
     }
+
 
     // お客さんの行動
     fun orderTuna() {
