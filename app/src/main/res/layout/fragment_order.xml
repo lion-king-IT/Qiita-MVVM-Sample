@@ -15,19 +15,19 @@
 
         <ImageView
             android:id="@+id/orderImageView"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_marginTop="40dp"
-            android:src="@{orderViewModel.orderImage}"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:layout_marginTop="80dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:imageResource="@{orderViewModel.orderImage}" />
 
         <Button
             android:id="@+id/tunaOrderButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="80dp"
             android:text="@{orderViewModel.orderText}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +38,7 @@
             android:id="@+id/complete_meal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="80dp"
             android:text="@{orderViewModel.billText}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
