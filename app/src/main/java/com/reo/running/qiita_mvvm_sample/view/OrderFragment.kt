@@ -35,7 +35,7 @@ class OrderFragment : Fragment() {
             it.tunaOrderButton.text = newText
         }
 
-        // viewLifecycleOwnerを第一引数年て渡すことで、お客さんに合わせて監視する設定
+        // viewLifecycleOwnerを第一引数を渡すことで、お客さんに合わせて監視する設定
         viewModel.orderImage.observe(viewLifecycleOwner, imageObserver)
         viewModel.orderText.observe(viewLifecycleOwner, textObserver)
         it.root
