@@ -11,8 +11,8 @@ import kotlinx.coroutines.launch
 class OrderViewModel : ViewModel() {
 
     // 画像のidを保持
-    private val _orderImage = MutableLiveData<Int>() // 板前さんだけが持つ
-    val orderImage: MutableLiveData<Int> // お客さんに渡す方、変更できない
+    private val _orderImage = MutableLiveData<Int>()
+    val orderImage: MutableLiveData<Int>
         get() = _orderImage
 
     // 注文ボタンのテキストの状態を保持
@@ -20,21 +20,21 @@ class OrderViewModel : ViewModel() {
     val orderText: LiveData<String>
         get() = _orderText
 
-    // 会計ボタンのテキストを保持
+    // 会計ボタンのテキストの状態を保持
     private val _billText = MutableLiveData<String>()
     val billText: LiveData<String>
         get() = _billText
 
+    // 注文ボタンのテキストの状態だけ初期値を設定
     init {
         _orderText.value = "入店"
     }
 
-    // 注文する処理
+    // お客さんの行動
     fun orderTuna() {
-
         when (_orderText.value) {
-
-            "入店" -> {
+            
+            "入店", "再入店" -> {
                 _orderImage.value = R.drawable.sushi_syokunin_man_mask
                 _orderText.value = "マグロ"
                 _billText.value = "お会計"
@@ -58,12 +58,11 @@ class OrderViewModel : ViewModel() {
                     _orderImage.value = R.drawable.home_kitaku_girl
                     _orderText.value = "再入店"
                 }
-
             }
         }
     }
 
-    // お会計処理
+    // お会計ボタンを押したときの処理
     fun pay() {
         _orderImage.value = R.drawable.message_okaikei_ohitori
         _orderText.value = "帰る"

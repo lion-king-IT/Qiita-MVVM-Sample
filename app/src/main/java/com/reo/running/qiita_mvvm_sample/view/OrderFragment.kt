@@ -21,7 +21,8 @@ class OrderFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? = FragmentOrderBinding.inflate(inflater, container, false).let {
         it.lifecycleOwner = viewLifecycleOwner
-        it.orderViewModel = viewModel
+        it.orderButton.setOnClickListener { viewModel.orderTuna() }
+        it.billButton.setOnClickListener { viewModel.pay() }
 
         // 監視センサ作成
         val imageObserver = Observer<Int> { newImageId ->
@@ -31,8 +32,12 @@ class OrderFragment : Fragment() {
 
         // 監視センサ作成
         val textObserver = Observer<String> { newText ->
-            // TextViewの更新処理
-            it.tunaOrderButton.text = newText
+            // ボタンテキストの更新処理
+            it.orderButton.text = newText
+        }
+
+        val billObserver = Observer<String> { newText ->
+            it.billButton.text = newText
         }
 
         // viewLifecycleOwnerを第一引数を渡すことで、お客さんに合わせて監視する設定
