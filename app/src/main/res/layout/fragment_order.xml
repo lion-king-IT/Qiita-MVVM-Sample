@@ -14,35 +14,36 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/orderImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/orderImageView"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
             android:layout_marginTop="40dp"
-            android:src=""
-            app:layout_constraintStart_toStartOf="parent"
+            android:src="@{orderViewModel.orderImage}"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/tunaOrderButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{orderViewModel.buttonText}"
             android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@id/orderImage"
-            app:layout_constraintStart_toStartOf="parent"
+            android:text="@{orderViewModel.orderText}"
             app:layout_constraintEnd_toEndOf="parent"
-            android:onClick="@{() -> view_model.tunaOrder()" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/orderImageView"
+            android:onClick="@{() -> orderViewModel.orderTuna()}" />
 
         <Button
             android:id="@+id/complete_meal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
-            android:text="@string/bill_text"
-            app:layout_constraintTop_toBottomOf="@id/tunaOrderButton"
+            android:text="@{orderViewModel.billText}"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/tunaOrderButton"
+            android:onClick="@{() -> orderViewModel.pay()}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
