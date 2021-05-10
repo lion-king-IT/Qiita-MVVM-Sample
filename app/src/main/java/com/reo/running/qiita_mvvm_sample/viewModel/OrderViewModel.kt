@@ -25,6 +25,8 @@ class OrderViewModel : ViewModel() {
     val billText: LiveData<String>
         get() = _billText
 
+    private var _tunaCount = MutableLiveData(0)
+
     private val _customerType = MutableLiveData(CustomerType.ENTER)
 
     // 注文ボタンのテキストの状態だけ初期値を設定
@@ -48,6 +50,7 @@ class OrderViewModel : ViewModel() {
                 _orderImage.value = R.drawable.sushi_akami
                 _orderText.value = "完食"
                 _customerType.value = CustomerType.COMPLETED_EAT
+                _tunaCount++
             }
 
             CustomerType.COMPLETED_EAT -> {
@@ -88,4 +91,8 @@ class OrderViewModel : ViewModel() {
         COMPLETED_EAT,
         GO_HOME
     }
+}
+
+private operator fun <T> MutableLiveData<T>.inc(): MutableLiveData<T> {
+
 }
