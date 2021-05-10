@@ -1,7 +1,6 @@
 package com.reo.running.qiita_mvvm_sample.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,6 @@ class OrderFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? = FragmentOrderBinding.inflate(inflater, container, false).let {
-        Log.d("debug-inFragment", "init")
         it.lifecycleOwner = viewLifecycleOwner
         it.orderButton.setOnClickListener { viewModel.orderTuna() }
         it.billButton.setOnClickListener { viewModel.pay() }
@@ -41,7 +39,7 @@ class OrderFragment : Fragment() {
         val billObserver = Observer<String> { newText ->
             it.billButton.text = newText
         }
-
+        
         // viewLifecycleOwnerを第一引数を渡すことで、お客さんに合わせて監視する設定
         viewModel.orderImage.observe(viewLifecycleOwner, imageObserver)
         viewModel.orderText.observe(viewLifecycleOwner, textObserver)
