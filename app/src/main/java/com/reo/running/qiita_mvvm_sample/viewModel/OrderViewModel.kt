@@ -1,6 +1,5 @@
 package com.reo.running.qiita_mvvm_sample.viewModel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,9 +25,10 @@ class OrderViewModel : ViewModel() {
     val billText: LiveData<String>
         get() = _billText
 
+    private val _customerType = MutableLiveData(CustomerType.ENTER)
+
     // 注文ボタンのテキストの状態だけ初期値を設定
     init {
-        Log.d("debug", "init")
         _orderText.value = "入店"
         _orderImage.value = R.drawable.sushi_syokunin_man_mask
     }
@@ -36,31 +36,34 @@ class OrderViewModel : ViewModel() {
 
     // お客さんの行動
     fun orderTuna() {
-        when (_orderText.value) {
-
-            "入店", "再入店" -> {
+        when (_customerType.value) {
+            CustomerType.ENTER, CustomerType.RE_ENTER -> {
                 _orderImage.value = R.drawable.sushi_syokunin_man_mask
                 _orderText.value = "マグロ"
                 _billText.value = "お会計"
+                _customerType.value = CustomerType.EAT_TUNA
             }
 
-            "マグロ" -> {
+            CustomerType.EAT_TUNA -> {
                 _orderImage.value = R.drawable.sushi_akami
                 _orderText.value = "完食"
+                _customerType.value = CustomerType.COMPLETED_EAT
             }
 
-            "完食" -> {
+            CustomerType.COMPLETED_EAT -> {
                 _orderImage.value = R.drawable.sushi_syokunin_man_mask
                 _orderText.value = "マグロ"
+                _customerType.value = CustomerType.EAT_TUNA
             }
 
-            "帰る" -> {
+            CustomerType.GO_HOME -> {
                 viewModelScope.launch {
                     _orderImage.value = R.drawable.tsugaku
                     _orderText.value = ""
                     delay(1000)
-                    _orderImage.value = R.drawable.home_kitaku_girl
+                    _orderImage.value = R.drawable.tsugaku
                     _orderText.value = "再入店"
+                    _customerType.value = CustomerType.RE_ENTER
                 }
             }
         }
@@ -73,8 +76,16 @@ class OrderViewModel : ViewModel() {
                 _orderImage.value = R.drawable.message_okaikei_ohitori
                 _orderText.value = "帰る"
                 _billText.value = ""
+                _customerType.value = CustomerType.GO_HOME
             }
         }
     }
 
+    enum class CustomerType {
+        ENTER,
+        RE_ENTER,
+        EAT_TUNA,
+        COMPLETED_EAT,
+        GO_HOME
+    }
 }
