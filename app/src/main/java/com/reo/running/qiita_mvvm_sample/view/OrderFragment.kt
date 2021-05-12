@@ -9,7 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.reo.running.qiita_mvvm_sample.databinding.FragmentOrderBinding
 import com.reo.running.qiita_mvvm_sample.viewModel.OrderViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class OrderFragment : Fragment() {
 
     // 客席にタッチパネル設置
@@ -36,13 +38,20 @@ class OrderFragment : Fragment() {
             it.orderButton.text = newText
         }
 
+        // 監視センサ作成
+        val cashObserver = Observer<String> { newText ->
+            it.cashDisplay.text = newText
+        }
+
+        // 監視センサ作成
         val billObserver = Observer<String> { newText ->
             it.billButton.text = newText
         }
-        
+
         // viewLifecycleOwnerを第一引数を渡すことで、お客さんに合わせて監視する設定
         viewModel.orderImage.observe(viewLifecycleOwner, imageObserver)
         viewModel.orderText.observe(viewLifecycleOwner, textObserver)
+        viewModel.cashDisplay.observe(viewLifecycleOwner, cashObserver)
         viewModel.billText.observe(viewLifecycleOwner, billObserver)
         it.root
     }

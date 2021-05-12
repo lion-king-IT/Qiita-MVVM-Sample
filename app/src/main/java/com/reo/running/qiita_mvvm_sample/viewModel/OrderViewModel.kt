@@ -5,15 +5,26 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.reo.running.qiita_mvvm_sample.R
+import com.reo.running.qiita_mvvm_sample.model.Sushi
+import com.reo.running.qiita_mvvm_sample.model.SushiDao
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class OrderViewModel : ViewModel() {
+@HiltViewModel
+class OrderViewModel @Inject constructor(private val sushiDao: SushiDao) : ViewModel() {
 
     // 画像のidを保持
     private val _orderImage = MutableLiveData<Int>()
-    val orderImage: MutableLiveData<Int>
+    val orderImage: LiveData<Int>
         get() = _orderImage
+
+    // 表示する値段を保持
+    private val _cashDisplay = MutableLiveData<String>()
+    val cashDisplay: LiveData<String>
+        get() = _cashDisplay
 
     // 注文ボタンのテキストの状態を保持
     private val _orderText = MutableLiveData<String>()
@@ -25,7 +36,7 @@ class OrderViewModel : ViewModel() {
     val billText: LiveData<String>
         get() = _billText
 
-    private var _tunaCount = MutableLiveData(0)
+    private val _tunaCount = MutableLiveData<Int>()
 
     private val _customerType = MutableLiveData(CustomerType.ENTER)
 
@@ -33,6 +44,7 @@ class OrderViewModel : ViewModel() {
     init {
         _orderText.value = "入店"
         _orderImage.value = R.drawable.sushi_syokunin_man_mask
+        _tunaCount.value = 0
     }
 
 
@@ -50,7 +62,7 @@ class OrderViewModel : ViewModel() {
                 _orderImage.value = R.drawable.sushi_akami
                 _orderText.value = "完食"
                 _customerType.value = CustomerType.COMPLETED_EAT
-                _tunaCount++
+                _tunaCount.value?.plus(1)
             }
 
             CustomerType.COMPLETED_EAT -> {
@@ -63,6 +75,7 @@ class OrderViewModel : ViewModel() {
                 viewModelScope.launch {
                     _orderImage.value = R.drawable.tsugaku
                     _orderText.value = ""
+                    _cashDisplay.value = ""
                     delay(1000)
                     _orderImage.value = R.drawable.tsugaku
                     _orderText.value = "再入店"
@@ -80,6 +93,16 @@ class OrderViewModel : ViewModel() {
                 _orderText.value = "帰る"
                 _billText.value = ""
                 _customerType.value = CustomerType.GO_HOME
+                viewModelScope.launch(Dispatchers.IO) {
+                    val history = Sushi(
+                        0,
+                        _tunaCount.value.toString(),
+                        _tunaCount.value?.times(100).toString()
+                    )
+                    sushiDao.insertSushi(history)
+                    _cashDisplay.value =
+                        history.orderHistory + "皿\n" + history.price
+                }
             }
         }
     }
@@ -91,8 +114,5 @@ class OrderViewModel : ViewModel() {
         COMPLETED_EAT,
         GO_HOME
     }
-}
-
-private operator fun <T> MutableLiveData<T>.inc(): MutableLiveData<T> {
 
 }
