@@ -2,7 +2,7 @@ package com.reo.running.qiita_mvvm_sample.model
 
 import androidx.room.*
 
-@Database(entities = arrayOf(Sushi::class), version = 1)
+@Database(entities = arrayOf(Sushi::class), version = 1,exportSchema = false)
 abstract class SushiDatabase : RoomDatabase() {
     abstract fun suhiDao(): SushiDao
 }

@@ -26,8 +26,12 @@ class OrderFragment : Fragment() {
         it.orderButton.setOnClickListener { viewModel.orderTuna() }
         it.billButton.setOnClickListener { viewModel.pay() }
 
+        val noteImageObserver = Observer<Int> { newImageId ->
+            it.noteImageView.setImageResource(newImageId)
+        }
+
         // 監視センサ作成
-        val imageObserver = Observer<Int> { newImageId ->
+        val orderImageObserver = Observer<Int> { newImageId ->
             // ImageViewの更新処理
             it.orderImageView.setImageResource(newImageId)
         }
@@ -49,7 +53,8 @@ class OrderFragment : Fragment() {
         }
 
         // viewLifecycleOwnerを第一引数を渡すことで、お客さんに合わせて監視する設定
-        viewModel.orderImage.observe(viewLifecycleOwner, imageObserver)
+        viewModel.noteImage.observe(viewLifecycleOwner,noteImageObserver)
+        viewModel.orderImage.observe(viewLifecycleOwner, orderImageObserver)
         viewModel.orderText.observe(viewLifecycleOwner, textObserver)
         viewModel.cashDisplay.observe(viewLifecycleOwner, cashObserver)
         viewModel.billText.observe(viewLifecycleOwner, billObserver)

@@ -1,5 +1,6 @@
 package com.reo.running.qiita_mvvm_sample.viewModel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +16,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OrderViewModel @Inject constructor(private val sushiDao: SushiDao) : ViewModel() {
+
+    private val _noteImage = MutableLiveData<Int>()
+    val noteImage: LiveData<Int>
+        get() = _noteImage
 
     // 画像のidを保持
     private val _orderImage = MutableLiveData<Int>()
@@ -42,8 +47,9 @@ class OrderViewModel @Inject constructor(private val sushiDao: SushiDao) : ViewM
 
     // 注文ボタンのテキストの状態だけ初期値を設定
     init {
+        _noteImage.value = R.drawable.zabuton_book_notebook
+        _orderImage.value = R.drawable.sushiya_building
         _orderText.value = "入店"
-        _orderImage.value = R.drawable.sushi_syokunin_man_mask
         _tunaCount.value = 0
     }
 
@@ -61,7 +67,8 @@ class OrderViewModel @Inject constructor(private val sushiDao: SushiDao) : ViewM
                 _orderImage.value = R.drawable.sushi_akami
                 _orderText.value = "完食"
                 _customerType.value = CustomerType.COMPLETED_EAT
-                _tunaCount.value?.plus(1)
+                _tunaCount.value = _tunaCount.value?.plus(1)
+                Log.d("debug", "_tuna.value = ${_tunaCount.value}")
             }
 
             CustomerType.COMPLETED_EAT -> {
@@ -76,13 +83,14 @@ class OrderViewModel @Inject constructor(private val sushiDao: SushiDao) : ViewM
                     _orderText.value = ""
                     _cashDisplay.value = ""
                     delay(1000)
-                    _orderImage.value = R.drawable.tsugaku
+                    _orderImage.value = R.drawable.home_kitaku_girl
                     _orderText.value = "再入店"
                     _customerType.value = CustomerType.RE_ENTER
                 }
             }
         }
     }
+
 
     // お会計ボタンを押したときの処理
     fun pay() {
@@ -92,16 +100,16 @@ class OrderViewModel @Inject constructor(private val sushiDao: SushiDao) : ViewM
                 _orderText.value = "帰る"
                 _billText.value = ""
                 _customerType.value = CustomerType.GO_HOME
+                val history = Sushi(
+                    0,
+                    _tunaCount.value.toString(),
+                    _tunaCount.value?.times(100).toString()
+                )
                 viewModelScope.launch(Dispatchers.IO) {
-                    val history = Sushi(
-                        0,
-                        _tunaCount.value.toString(),
-                        _tunaCount.value?.times(100).toString()
-                    )
                     sushiDao.insertSushi(history)
-                    _cashDisplay.value =
-                        history.orderHistory + "皿\n" + history.price
                 }
+                _cashDisplay.value =
+                    _tunaCount.value.toString() + "皿\n￥" + history.price
             }
         }
     }
