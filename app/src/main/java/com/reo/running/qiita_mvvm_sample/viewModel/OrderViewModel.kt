@@ -1,6 +1,5 @@
 package com.reo.running.qiita_mvvm_sample.viewModel
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,11 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.reo.running.qiita_mvvm_sample.R
 import com.reo.running.qiita_mvvm_sample.model.Sushi
 import com.reo.running.qiita_mvvm_sample.model.SushiDao
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class OrderViewModel @ViewModelInject constructor(private val sushiDao: SushiDao) : ViewModel() {
+@HiltViewModel
+class OrderViewModel @Inject constructor(private val sushiDao: SushiDao) : ViewModel() {
 
     // 画像のidを保持
     private val _orderImage = MutableLiveData<Int>()
@@ -44,7 +46,6 @@ class OrderViewModel @ViewModelInject constructor(private val sushiDao: SushiDao
         _orderImage.value = R.drawable.sushi_syokunin_man_mask
         _tunaCount.value = 0
     }
-
 
     // お客さんの行動
     fun orderTuna() {
