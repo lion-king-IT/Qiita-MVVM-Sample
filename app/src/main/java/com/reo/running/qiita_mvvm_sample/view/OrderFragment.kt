@@ -9,10 +9,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.reo.running.qiita_mvvm_sample.databinding.FragmentOrderBinding
 import com.reo.running.qiita_mvvm_sample.viewModel.OrderViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class OrderFragment : Fragment() {
 
-    // 客席にタッチパネル設置
     private val viewModel: OrderViewModel by viewModels()
 
     override fun onCreateView(
@@ -24,25 +25,26 @@ class OrderFragment : Fragment() {
         it.orderButton.setOnClickListener { viewModel.orderTuna() }
         it.billButton.setOnClickListener { viewModel.pay() }
 
-        // 監視センサ作成
-        val imageObserver = Observer<Int> { newImageId ->
-            // ImageViewの更新処理
+        val orderImageObserver = Observer<Int> { newImageId ->
             it.orderImageView.setImageResource(newImageId)
         }
 
-        // 監視センサ作成
+
         val textObserver = Observer<String> { newText ->
-            // ボタンテキストの更新処理
             it.orderButton.text = newText
+        }
+
+        val cashObserver = Observer<String> { newText ->
+            it.cashDisplay.text = newText
         }
 
         val billObserver = Observer<String> { newText ->
             it.billButton.text = newText
         }
-        
-        // viewLifecycleOwnerを第一引数を渡すことで、お客さんに合わせて監視する設定
-        viewModel.orderImage.observe(viewLifecycleOwner, imageObserver)
+
+        viewModel.orderImage.observe(viewLifecycleOwner, orderImageObserver)
         viewModel.orderText.observe(viewLifecycleOwner, textObserver)
+        viewModel.cashDisplay.observe(viewLifecycleOwner, cashObserver)
         viewModel.billText.observe(viewLifecycleOwner, billObserver)
         it.root
     }
