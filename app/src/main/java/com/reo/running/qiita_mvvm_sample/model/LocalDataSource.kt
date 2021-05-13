@@ -11,14 +11,14 @@ abstract class SushiDatabase : RoomDatabase() {
 data class Sushi(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
-    val orderHistory: String,
+    val orderHistory: Int?,
     val price: String
 )
 
 @Dao
 interface SushiDao {
     @Query("SELECT * FROM sushi")
-    fun getAll(): List<Sushi>
+    suspend fun getAll(): List<Sushi>
 
     @Query("SELECT * FROM sushi where id = :id")
     fun getHistory(id: Int): Sushi

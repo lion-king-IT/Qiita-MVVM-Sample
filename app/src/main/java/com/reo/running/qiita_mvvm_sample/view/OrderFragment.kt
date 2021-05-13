@@ -14,7 +14,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class OrderFragment : Fragment() {
 
-    // 客席にタッチパネル設置
     private val viewModel: OrderViewModel by viewModels()
 
     override fun onCreateView(
@@ -26,34 +25,23 @@ class OrderFragment : Fragment() {
         it.orderButton.setOnClickListener { viewModel.orderTuna() }
         it.billButton.setOnClickListener { viewModel.pay() }
 
-        val noteImageObserver = Observer<Int> { newImageId ->
-            it.noteImageView.setImageResource(newImageId)
-        }
-
-        // 監視センサ作成
         val orderImageObserver = Observer<Int> { newImageId ->
-            // ImageViewの更新処理
             it.orderImageView.setImageResource(newImageId)
         }
 
-        // 監視センサ作成
+
         val textObserver = Observer<String> { newText ->
-            // ボタンテキストの更新処理
             it.orderButton.text = newText
         }
 
-        // 監視センサ作成
         val cashObserver = Observer<String> { newText ->
             it.cashDisplay.text = newText
         }
 
-        // 監視センサ作成
         val billObserver = Observer<String> { newText ->
             it.billButton.text = newText
         }
 
-        // viewLifecycleOwnerを第一引数を渡すことで、お客さんに合わせて監視する設定
-        viewModel.noteImage.observe(viewLifecycleOwner,noteImageObserver)
         viewModel.orderImage.observe(viewLifecycleOwner, orderImageObserver)
         viewModel.orderText.observe(viewLifecycleOwner, textObserver)
         viewModel.cashDisplay.observe(viewLifecycleOwner, cashObserver)
