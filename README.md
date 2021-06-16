@@ -5,3 +5,4 @@
 3.[LiveDataについて解説](https://qiita.com/LaO/items/48444f13b8174791bf29)  
 4.[Coroutinesについて解説](https://qiita.com/LaO/items/63f84fefd29fdf135983)  
 5.[Roomについて解説](https://qiita.com/LaO/items/a04c78072da471e9d641)  
+6.[Repositoryについて解説](https://qiita.com/LaO/items/45eb7b640fa81814246b)
