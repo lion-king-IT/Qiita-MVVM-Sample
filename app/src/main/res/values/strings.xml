@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">Qiita-MVVM-Sample</string>
-    <string name="order_text">ご注文をどうぞ！</string>
-    <string name="tuna_order">マグロ</string>
-    <string name="complete_meal">完食</string>
-    <string name="bill_text">会計</string>
-</resources>
