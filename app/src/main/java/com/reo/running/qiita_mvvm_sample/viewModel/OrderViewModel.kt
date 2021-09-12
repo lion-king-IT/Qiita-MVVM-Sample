@@ -45,6 +45,7 @@ class OrderViewModel @Inject constructor(private val sushiDao: SushiDao) : ViewM
     private var _totalDish: Int = 0
 
     private var _amountBill: Int = 0
+
     init {
         _orderImage.value = R.drawable.sushiya_building
         _orderText.value = "入店"
