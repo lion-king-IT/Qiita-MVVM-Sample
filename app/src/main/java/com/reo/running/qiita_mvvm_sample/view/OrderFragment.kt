@@ -29,7 +29,6 @@ class OrderFragment : Fragment() {
             it.orderImageView.setImageResource(newImageId)
         }
 
-
         val textObserver = Observer<String> { newText ->
             it.orderButton.text = newText
         }
