@@ -13,8 +13,8 @@ class SushiRepository @Inject constructor(
 ) {
     suspend fun getSushiList(): List<String> = withContext(Dispatchers.IO) {
         val resources = context.resources
-        val assetManager = resources.assets //アセット呼び出し
-        val inputStream = assetManager.open("sushi.json") //Jsonファイル
+        val assetManager = resources.assets
+        val inputStream = assetManager.open("sushi.json")
         val bufferedReader = BufferedReader(InputStreamReader(inputStream))
 
         val gson = Gson()
