@@ -1,0 +1,14 @@
+{
+  "data":{
+    "user": {
+      "name": "hoge",
+      "age": 23,
+      "sex": "male",
+      "friends": [
+        {
+          "name":"fuga"
+        }
+      ]
+    }
+  }
+}

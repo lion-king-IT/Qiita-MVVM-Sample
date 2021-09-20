@@ -1,6 +1,7 @@
 package com.reo.running.qiita_mvvm_sample.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ class OrderFragment : Fragment() {
         it.orderButton.setOnClickListener { viewModel.orderTuna() }
         it.billButton.setOnClickListener { viewModel.pay() }
 
+
         val orderImageObserver = Observer<Int> { newImageId ->
             it.orderImageView.setImageResource(newImageId)
         }
@@ -47,5 +49,15 @@ class OrderFragment : Fragment() {
         viewModel.cashDisplay.observe(viewLifecycleOwner, cashObserver)
         viewModel.billText.observe(viewLifecycleOwner, billObserver)
         it.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.sushiList.observe(viewLifecycleOwner) {
+            it.forEach {
+                Log.d("debug", "sushi $it")
+            }
+        }
     }
 }

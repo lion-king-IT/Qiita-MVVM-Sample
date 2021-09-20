@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.reo.running.qiita_mvvm_sample.R
 import com.reo.running.qiita_mvvm_sample.model.Sushi
 import com.reo.running.qiita_mvvm_sample.model.SushiDao
+import com.reo.running.qiita_mvvm_sample.repository.SushiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -16,7 +17,10 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class OrderViewModel @Inject constructor(private val sushiDao: SushiDao) : ViewModel() {
+class OrderViewModel @Inject constructor(
+    private val sushiDao: SushiDao,
+    private val sushiRepository: SushiRepository
+) : ViewModel() {
 
     private val _orderImage = MutableLiveData<Int>()
     val orderImage: LiveData<Int>
@@ -46,10 +50,20 @@ class OrderViewModel @Inject constructor(private val sushiDao: SushiDao) : ViewM
 
     private var _amountBill: Int = 0
 
+    val sushiList = MutableLiveData<List<String>>()
+
     init {
         _orderImage.value = R.drawable.sushiya_building
         _orderText.value = "入店"
         _tunaCount.value = 0
+
+        viewModelScope.launch {
+            runCatching {
+                sushiList.value = sushiRepository.getSushiList()
+            }.onFailure {
+                Log.w("warning", "$it")
+            }
+        }
     }
 
     fun orderTuna() {

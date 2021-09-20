@@ -27,4 +27,10 @@ object AppModule {
     @Provides
     @Singleton
     fun provideSushiDao(db: SushiDatabase) = db.suhiDao()
+
+    @Provides
+    @Singleton
+    fun provideApplicationContext(@ApplicationContext context: Context): Context {
+        return context
+    }
 }
