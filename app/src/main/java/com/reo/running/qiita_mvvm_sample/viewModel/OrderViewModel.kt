@@ -59,6 +59,7 @@ class OrderViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 sushiList.value = sushiRepository.getSushiList()
+                Log.d("debug", sushiList.value.toString())
             }.onFailure {
                 Log.w("debug", "$it")
             }

@@ -1,4 +1,4 @@
-package com.reo.running.qiita_mvvm_sample.view
+package com.reo.running.qiita_mvvm_sample.util
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
