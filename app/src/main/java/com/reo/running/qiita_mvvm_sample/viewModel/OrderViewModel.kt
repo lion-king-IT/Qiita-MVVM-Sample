@@ -1,13 +1,12 @@
 package com.reo.running.qiita_mvvm_sample.viewModel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.reo.running.qiita_mvvm_sample.R
 import com.reo.running.qiita_mvvm_sample.model.Sushi
-import com.reo.running.qiita_mvvm_sample.model.SushiDao
+import com.reo.running.qiita_mvvm_sample.repository.SushiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -16,7 +15,9 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class OrderViewModel @Inject constructor(private val sushiDao: SushiDao) : ViewModel() {
+class OrderViewModel @Inject constructor(
+    private val sushiRepository: SushiRepository
+) : ViewModel() {
 
     private val _orderImage = MutableLiveData<Int>()
     val orderImage: LiveData<Int>
@@ -46,10 +47,21 @@ class OrderViewModel @Inject constructor(private val sushiDao: SushiDao) : ViewM
 
     private var _amountBill: Int = 0
 
+    val sushiList = MutableLiveData<List<String>>()
+
     init {
         _orderImage.value = R.drawable.sushiya_building
         _orderText.value = "入店"
         _tunaCount.value = 0
+//        TODO: 後で使う
+//        viewModelScope.launch {
+//            runCatching {
+//                sushiList.value = sushiRepository.getSushiList()
+//            }.onFailure {
+//                Log.w("debug", "$it")
+//            }
+//
+//        }
     }
 
     fun orderTuna() {
@@ -77,12 +89,10 @@ class OrderViewModel @Inject constructor(private val sushiDao: SushiDao) : ViewM
 
             CustomerType.GO_HOME -> {
                 viewModelScope.launch(Dispatchers.IO) {
-
-                    sushiDao.getAll().let {
+                    sushiRepository.getAllSushiData().let {
                         lastIndex = it.lastIndex
                         _totalData.postValue(it)
                     }
-
                     withContext(Dispatchers.Main) {
                         for (i in 0..lastIndex) {
                             _totalDish += _totalData.value?.get(i)?.orderHistory!!
@@ -91,17 +101,15 @@ class OrderViewModel @Inject constructor(private val sushiDao: SushiDao) : ViewM
                         _orderImage.value = R.drawable.tsugaku
                         _orderText.value = ""
                         _cashDisplay.value = ""
-                        delay(1000)
                         _orderImage.value = R.drawable.home_kitaku_girl
+                        delay(1000)
                         _orderText.value = "再入店"
                         _customerType.value = CustomerType.RE_ENTER
                         _cashDisplay.value =
                             "総皿数：${_totalDish}皿\n請求総額:￥${_amountBill}"
                         _tunaCount.value = 0
                     }
-
                 }
-
             }
         }
     }
@@ -109,34 +117,32 @@ class OrderViewModel @Inject constructor(private val sushiDao: SushiDao) : ViewM
     fun pay() {
         when (_billText.value) {
             "お会計" -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    sushiDao.insertSushi(
+                viewModelScope.launch {
+                    sushiRepository.saveSushiData(
                         Sushi(
                             0,
                             _tunaCount.value,
                             calcSushi(_tunaCount)
                         )
                     )
-                    _cashDisplay.postValue("${_tunaCount.value}皿\n￥${calcSushi(_tunaCount)}")
-                    withContext(Dispatchers.Main) {
-                        _orderImage.value = R.drawable.message_okaikei_ohitori
-                        _orderText.value = "帰る"
-                        _billText.value = ""
-                        _customerType.value = CustomerType.GO_HOME
-                    }
                 }
+                _cashDisplay.postValue("${_tunaCount.value}皿\n￥${calcSushi(_tunaCount)}")
+                _orderImage.value = R.drawable.message_okaikei_ohitori
+                _orderText.value = "帰る"
+                _billText.value = ""
+                _customerType.value = CustomerType.GO_HOME
             }
         }
     }
+}
 
-    private fun calcSushi(dishCount: MutableLiveData<Int>) = dishCount.value?.times(100).toString()
+private fun calcSushi(dishCount: MutableLiveData<Int>) = dishCount.value?.times(100).toString()
 
-    enum class CustomerType {
-        ENTER,
-        RE_ENTER,
-        EAT_TUNA,
-        COMPLETED_EAT,
-        GO_HOME
-    }
 
+enum class CustomerType {
+    ENTER,
+    RE_ENTER,
+    EAT_TUNA,
+    COMPLETED_EAT,
+    GO_HOME
 }

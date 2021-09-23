@@ -1,6 +1,7 @@
 package com.reo.running.qiita_mvvm_sample.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -20,6 +21,11 @@ class OrderFragment : Fragment(R.layout.fragment_order) {
         FragmentOrderBinding.bind(view).also {
             it.lifecycleOwner = viewLifecycleOwner
             it.viewModel = viewModel
+        }
+        viewModel.sushiList.observe(viewLifecycleOwner) { it ->
+            it.forEach {
+                Log.d("debug", it)
+            }
         }
     }
 }
