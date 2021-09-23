@@ -24,9 +24,7 @@ class SushiRepository @Inject constructor(
         gson.fromJson(bufferedReader, Tmp::class.java).data
     }
 
-    suspend fun getAllSushiData() = withContext(Dispatchers.IO) {
-        sushiDao.getAll()
-    }
+    suspend fun getAllSushiData() = sushiDao.getAll()
 
     suspend fun saveSushiData(sushiData: Sushi) = withContext(Dispatchers.IO) {
         sushiDao.insertSushi(sushiData)

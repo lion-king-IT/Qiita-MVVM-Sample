@@ -1,6 +1,5 @@
 package com.reo.running.qiita_mvvm_sample.viewModel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -54,14 +53,15 @@ class OrderViewModel @Inject constructor(
         _orderImage.value = R.drawable.sushiya_building
         _orderText.value = "入店"
         _tunaCount.value = 0
-        viewModelScope.launch {
-            runCatching {
-                sushiList.value = sushiRepository.getSushiList()
-            }.onFailure {
-                Log.w("debug", "$it")
-            }
-
-        }
+//        TODO: 後で使う
+//        viewModelScope.launch {
+//            runCatching {
+//                sushiList.value = sushiRepository.getSushiList()
+//            }.onFailure {
+//                Log.w("debug", "$it")
+//            }
+//
+//        }
     }
 
     fun orderTuna() {
@@ -88,13 +88,11 @@ class OrderViewModel @Inject constructor(
             }
 
             CustomerType.GO_HOME -> {
-                viewModelScope.launch {
-
+                viewModelScope.launch(Dispatchers.IO) {
                     sushiRepository.getAllSushiData().let {
                         lastIndex = it.lastIndex
                         _totalData.postValue(it)
                     }
-
                     withContext(Dispatchers.Main) {
                         for (i in 0..lastIndex) {
                             _totalDish += _totalData.value?.get(i)?.orderHistory!!
@@ -103,17 +101,15 @@ class OrderViewModel @Inject constructor(
                         _orderImage.value = R.drawable.tsugaku
                         _orderText.value = ""
                         _cashDisplay.value = ""
-                        delay(1000)
                         _orderImage.value = R.drawable.home_kitaku_girl
+                        delay(1000)
                         _orderText.value = "再入店"
                         _customerType.value = CustomerType.RE_ENTER
                         _cashDisplay.value =
                             "総皿数：${_totalDish}皿\n請求総額:￥${_amountBill}"
                         _tunaCount.value = 0
                     }
-
                 }
-
             }
         }
     }
