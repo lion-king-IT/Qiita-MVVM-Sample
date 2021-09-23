@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.reo.running.qiita_mvvm_sample.R
 import com.reo.running.qiita_mvvm_sample.model.Sushi
-import com.reo.running.qiita_mvvm_sample.model.SushiDao
 import com.reo.running.qiita_mvvm_sample.repository.SushiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +17,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OrderViewModel @Inject constructor(
-    private val sushiDao: SushiDao,
     private val sushiRepository: SushiRepository
 ) : ViewModel() {
 
@@ -90,9 +88,9 @@ class OrderViewModel @Inject constructor(
             }
 
             CustomerType.GO_HOME -> {
-                viewModelScope.launch(Dispatchers.IO) {
+                viewModelScope.launch {
 
-                    sushiDao.getAll().let {
+                    sushiRepository.getAllSushiData().let {
                         lastIndex = it.lastIndex
                         _totalData.postValue(it)
                     }
@@ -123,34 +121,32 @@ class OrderViewModel @Inject constructor(
     fun pay() {
         when (_billText.value) {
             "お会計" -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    sushiDao.insertSushi(
+                viewModelScope.launch {
+                    sushiRepository.saveSushiData(
                         Sushi(
                             0,
                             _tunaCount.value,
                             calcSushi(_tunaCount)
                         )
                     )
-                    _cashDisplay.postValue("${_tunaCount.value}皿\n￥${calcSushi(_tunaCount)}")
-                    withContext(Dispatchers.Main) {
-                        _orderImage.value = R.drawable.message_okaikei_ohitori
-                        _orderText.value = "帰る"
-                        _billText.value = ""
-                        _customerType.value = CustomerType.GO_HOME
-                    }
                 }
+                _cashDisplay.postValue("${_tunaCount.value}皿\n￥${calcSushi(_tunaCount)}")
+                _orderImage.value = R.drawable.message_okaikei_ohitori
+                _orderText.value = "帰る"
+                _billText.value = ""
+                _customerType.value = CustomerType.GO_HOME
             }
         }
     }
+}
 
-    private fun calcSushi(dishCount: MutableLiveData<Int>) = dishCount.value?.times(100).toString()
+private fun calcSushi(dishCount: MutableLiveData<Int>) = dishCount.value?.times(100).toString()
 
 
-    enum class CustomerType {
-        ENTER,
-        RE_ENTER,
-        EAT_TUNA,
-        COMPLETED_EAT,
-        GO_HOME
-    }
+enum class CustomerType {
+    ENTER,
+    RE_ENTER,
+    EAT_TUNA,
+    COMPLETED_EAT,
+    GO_HOME
 }
